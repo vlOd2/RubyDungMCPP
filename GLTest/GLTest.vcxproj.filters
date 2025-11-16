@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="GLCanvas.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainForm.h" />
+    <ClInclude Include="Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="IGame.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameEngine.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLCanvas.h" />
+    <ClInclude Include="RDTimer.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDTextures.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Game">
+      <UniqueIdentifier>{7581cdb1-f115-4cc9-95ae-4589c06c25d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{882d7e32-ece6-4419-96a9-e158e50ec6aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RubyDung">
+      <UniqueIdentifier>{acf55938-b830-495d-a3ef-4c3b624fe52a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
