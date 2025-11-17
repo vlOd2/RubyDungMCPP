@@ -130,6 +130,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -151,7 +152,10 @@
     </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="RDAABB.h" />
+    <ClInclude Include="RDFrustum.h" />
     <ClInclude Include="RDHitResult.h" />
+    <ClInclude Include="RDLevel.h" />
+    <ClInclude Include="RDLevelListener.h" />
     <ClInclude Include="RDTesselator.h" />
     <ClInclude Include="RDTile.h" />
     <ClInclude Include="RDTimer.h" />

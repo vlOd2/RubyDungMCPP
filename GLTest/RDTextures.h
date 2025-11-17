@@ -25,8 +25,7 @@ public:
 					ImageLockMode::ReadOnly, PixelFormat::Format32bppArgb);
 				
 				size_t bufferSize = data->Stride * data->Height * 4;
-				unsigned char* buffer = (unsigned char*)malloc(bufferSize);
-				memset(buffer, 0, bufferSize);
+				unsigned char* buffer = (unsigned char*)calloc(bufferSize, 1);
 
 				for (int i = 0; i < bufferSize; i += 4) {
 					buffer[i + 0] = (CastPtr<unsigned char*>(data->Scan0))[i + 2]; // R
