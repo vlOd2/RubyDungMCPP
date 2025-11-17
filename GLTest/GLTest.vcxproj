@@ -150,6 +150,10 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RDAABB.h" />
+    <ClInclude Include="RDHitResult.h" />
+    <ClInclude Include="RDTesselator.h" />
+    <ClInclude Include="RDTile.h" />
     <ClInclude Include="RDTimer.h" />
     <ClInclude Include="RDTextures.h" />
   </ItemGroup>

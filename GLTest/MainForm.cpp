@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "MainForm.h"
 
-#include <iostream>
-
 MainForm::MainForm()
 {
 	InitializeComponent();
@@ -25,5 +23,5 @@ MainForm::~MainForm()
 }
 
 void MainForm::btnSomething_Click(Object^ sender, EventArgs^ e) {
-	MessageBox::Show("very silly :3");
+	MessageBox::Show("test");
 }

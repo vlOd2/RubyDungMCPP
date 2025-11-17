@@ -32,6 +32,12 @@
     <ClInclude Include="RDTextures.h">
       <Filter>RubyDung</Filter>
     </ClInclude>
+    <ClInclude Include="RDHitResult.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDAABB.h" />
+    <ClInclude Include="RDTile.h" />
+    <ClInclude Include="RDTesselator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Game">
