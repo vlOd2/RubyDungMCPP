@@ -27,23 +27,33 @@ public:
 	}
 
 	void Init() {
-
+		this->Clear();
+		this->hasColor = false;
+		this->hasTexture = false;
 	}
 
 	void Tex(float u, float v) {
-
+		this->hasTexture = true;
+		this->u = u;
+		this->v = v;
 	}
 
 	void Color(float r, float g, float b) {
-
+		this->hasColor = true;
+		this->r = r;
+		this->g = g;
+		this->b = b;
 	}
 
 	void Vertex(float x, float y, float z) {
-
+		this->vertices++;
+		if (this->vertices == 100000) {
+			this->Flush();
+		}
 	}
 
 private:
 	void Clear() {
-
+		this->vertices = 0;
 	}
 };
