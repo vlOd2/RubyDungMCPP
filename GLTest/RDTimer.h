@@ -3,12 +3,12 @@
 using namespace System;
 using namespace System::Diagnostics;
 
-constexpr long NS_TO_S = 1000000000;
+constexpr long long NS_TO_S = 1000000000;
 
 public ref class RDTimer {
 private:
 	float ticksPerSecond;
-	long lastTime;
+	long long lastTime;
 	static System::DateTime epoch = System::DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind::Utc); 
 
 public:
@@ -23,25 +23,25 @@ public:
 		this->lastTime = MilliTime();
 	}
 
-	static long NanoTicks() {
+	static long long NanoTicks() {
 		return Stopwatch::GetTimestamp() * NS_TO_S / Stopwatch::Frequency;
 	}
 
-	static long MilliTime() {
-		return (long)(DateTime::UtcNow - epoch).TotalMilliseconds;
+	static long long MilliTime() {
+		return (long long)(DateTime::UtcNow - RDTimer::epoch).TotalMilliseconds;
 	}
 
-	static long SecondTime() {
-		return (long)(DateTime::UtcNow - epoch).TotalSeconds;
+	static long long SecondTime() {
+		return (long long)(DateTime::UtcNow - RDTimer::epoch).TotalSeconds;
 	}
 
 	void AdvanceTime() {
-		long now = this->NanoTicks();
-		long passedNs = now - this->lastTime;
+		long long now = this->NanoTicks();
+		long long passedNs = now - this->lastTime;
 		this->lastTime = now;
 
-		if (passedNs < 0L) {
-			passedNs = 0L;
+		if (passedNs < 1L) {
+			passedNs = 1L;
 		}
 		if (passedNs > NS_TO_S) {
 			passedNs = NS_TO_S;

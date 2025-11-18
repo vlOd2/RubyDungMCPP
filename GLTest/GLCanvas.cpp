@@ -168,6 +168,13 @@ void GLCanvas::OnMouseMove(MouseEventArgs^ e) {
 	this->mouseX = mx;
 	this->mouseY = my;
 	this->game->OnMouseMove(this->mouseX, this->mouseY, xd, yd);
+	if (this->mouseCaptured && this->Focused) {
+		// warp mouse when close to edge
+		if (e->X < 5 || e->X >= this->ClientSize.Width - 5 ||
+			e->Y < 5 || e->Y >= this->ClientSize.Height - 5) {
+
+		}
+	}
 }
 
 void GLCanvas::OnResize(EventArgs^ e) {
@@ -188,11 +195,11 @@ void GLCanvas::HandleMouseCapture() {
 	this->Capture = this->mouseCaptured;
 	if (this->mouseCaptured && this->Focused) {
 		this->Cursor->Clip = RectangleToScreen(Drawing::Rectangle(Point::Empty, ClientSize));
-		this->Cursor->Hide();
+		//this->Cursor->Hide();
 	}
 	else {
 		this->Cursor->Clip = Rectangle::Empty;
-		this->Cursor->Show();
+		//this->Cursor->Show();
 	}
 }
 

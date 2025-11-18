@@ -24,9 +24,10 @@ private:
 	RDLevelRenderer^ levelRenderer;
 	RDPlayer^ player;
 	RDHitResult^ hitResult;
-	long lastTime = RDTimer::MilliTime();
+	long long lastTime = RDTimer::MilliTime();
 	int frames = 0;
 	float* fogColor;
+	bool mouseCaptured;
 
 	void Tick();
 

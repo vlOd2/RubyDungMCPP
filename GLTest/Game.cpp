@@ -28,7 +28,8 @@ void Game::Init(IGameEngine^ engine) {
 	this->levelRenderer = gcnew RDLevelRenderer(this->level);
 	this->player = gcnew RDPlayer(engine, this->level);
 
-	//this->engine->SetMouseCapture(true);
+	this->mouseCaptured = true;
+	this->engine->SetMouseCapture(this->mouseCaptured);
 }
 
 void Game::OnResize(int width, int height) {
@@ -38,10 +39,15 @@ void Game::OnResize(int width, int height) {
 }
 
 void Game::OnKeyState(int key, char c, bool state, bool repeat) {
+	if (key == (int)Keys::Escape && state) {
+		Console::WriteLine("Toggling mouse");
+		this->mouseCaptured = !this->mouseCaptured;
+		this->engine->SetMouseCapture(this->mouseCaptured);
+	}
 }
 
 void Game::OnMouseMove(float x, float y, float xd, float yd) {
-	this->player->Turn(xd, yd);
+	this->player->Turn(xd, -yd);
 }
 
 void Game::OnMouseButton(int btn, bool state) {
@@ -89,8 +95,8 @@ void Game::Draw() {
 	this->Render(this->timer->a);
 	this->frames++;
 
-	while (RDTimer::MilliTime()  >= lastTime + 1000L) {
-		Console::WriteLine(frames + " fps, " + RDChunk::updates);
+	if (RDTimer::MilliTime() >= this->lastTime + 1000L) {
+		Console::WriteLine("{0} fps, {1}", this->frames, RDChunk::updates);
 		RDChunk::updates = 0;
 		this->lastTime += 1000L;
 		this->frames = 0;
@@ -134,6 +140,7 @@ void Game::SetupPickCamera(float a, int x, int y) {
 }
 
 void Game::Render(float a) {
+	glViewport(0, 0, this->width, this->height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	this->SetupCamera(a);
 	glEnable(GL_CULL_FACE);

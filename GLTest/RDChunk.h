@@ -11,12 +11,12 @@ public ref class RDChunk {
 public:
 	RDAABB^ aabb;
 	RDLevel^ level;
-	const int x0;
-	const int y0;
-	const int z0;
-	const int x1;
-	const int y1;
-	const int z1;
+	int x0;
+	int y0;
+	int z0;
+	int x1;
+	int y1;
+	int z1;
 	static int rebuiltThisFrame;
 	static int updates;
 
@@ -27,14 +27,20 @@ private:
 	static RDTesselator^ t = gcnew RDTesselator();
 
 public:
-	RDChunk(RDLevel^ level, int x0, int y0, int z0, int x1, int y1, int z1) : x0(x0), y0(y0), z0(z0), x1(x1), y1(y1), z1(z1) {
+	RDChunk(RDLevel^ level, int x0, int y0, int z0, int x1, int y1, int z1) {
 		this->level = level;
+		this->x0 = x0;
+		this->y0 = y0;
+		this->z0 = z0;
+		this->x1 = x1;
+		this->y1 = y1;
+		this->z1 = z1;
 		this->aabb = gcnew RDAABB((float)x0, (float)y0, (float)z0, (float)x1, (float)y1, (float)z1);
 		this->lists = glGenLists(2);
 	}
 
 	void Rebuild(int layer) {
-		if (rebuiltThisFrame < 2) {
+		if (rebuiltThisFrame >= 2) {
 			return;
 		}
 		this->dirty = false;

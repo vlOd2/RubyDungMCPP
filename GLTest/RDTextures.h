@@ -11,7 +11,7 @@ using namespace System::Drawing::Imaging;
 
 public ref class RDTextures abstract sealed {
 private:
-	static Dictionary<String^, int>^ idMap;
+	static Dictionary<String^, int>^ idMap = gcnew Dictionary<String^, int>();
 
 public:
 	static unsigned int LoadTexture(String^ resourceName, int mode) {
@@ -20,11 +20,25 @@ public:
 				return idMap[resourceName];
 			}
 			else {
-				Bitmap^ bmp = gcnew Bitmap(Image::FromFile(resourceName));
+				Bitmap^ bmp = nullptr;
+				
+				try {
+					bmp = gcnew Bitmap(Image::FromFile(resourceName));
+				}
+				catch (Exception^ ex) {
+					Console::WriteLine("Failed to read texture {0}: {1}", resourceName, ex);
+					bmp = gcnew Bitmap(256, 256);
+					for (int x = 0; x < 256; x++) {
+						for (int y = 0; y < 256; y++) {
+							bmp->SetPixel(x, y, Color::Purple);
+						}
+					}
+				}
+
 				BitmapData^ data = bmp->LockBits(Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), 
 					ImageLockMode::ReadOnly, PixelFormat::Format32bppArgb);
 				
-				size_t bufferSize = data->Stride * data->Height * 4;
+				size_t bufferSize = data->Width * data->Height * 4;
 				unsigned char* buffer = (unsigned char*)calloc(bufferSize, 1);
 
 				for (int i = 0; i < bufferSize; i += 4) {

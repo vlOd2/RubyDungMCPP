@@ -8,9 +8,9 @@ using namespace System::Collections::Generic;
 
 public ref class RDLevel {
 public:
-	const int width;
-	const int height;
-	const int depth;
+	int width;
+	int height;
+	int depth;
 
 private:
 	array<unsigned char>^ blocks;
@@ -18,9 +18,13 @@ private:
 	List<RDLevelListener^>^ listeners;
 
 public:
-	RDLevel(int w, int h, int d) : width(w), height(h), depth(d) {
+	RDLevel(int w, int h, int d) {
+		this->width = w;
+		this->height = h;
+		this->depth = d;
 		this->blocks = gcnew array<unsigned char>(w * h * d);
-		this->lightDepths = gcnew array<int>(w * d);
+		this->lightDepths = gcnew array<int>(w * h);
+		this->listeners = gcnew List<RDLevelListener^>();
 
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < d; y++) {
