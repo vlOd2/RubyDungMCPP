@@ -20,11 +20,11 @@ public ref class RDFrustum {
 private:
 	array<Vector4>^ planes;
 
-	RDFrustum() {
-		this->planes = gcnew array<Vector4>(6);
-	}
-
 public:
+    RDFrustum() {
+        this->planes = gcnew array<Vector4>(6);
+    }
+
 	void Calculate() {
 		Matrix4x4 projMatrix = ExportMatrix(GL_PROJECTION_MATRIX);
 		Matrix4x4 viewMatrix = ExportMatrix(GL_MODELVIEW_MATRIX);
@@ -102,7 +102,7 @@ public:
         return true;
     }
 
-    bool Contains(RDAABB bb) {
-		return this->Contains(bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1);
+    bool Contains(RDAABB^ bb) {
+		return this->Contains(bb->x0, bb->y0, bb->z0, bb->x1, bb->y1, bb->z1);
     }
 };

@@ -195,3 +195,9 @@ void GLCanvas::HandleMouseCapture() {
 		this->Cursor->Show();
 	}
 }
+
+bool GLCanvas::GetKeyState(int key) {
+	if (key < 0 || key >= this->keys->Length)
+		return false;
+	return this->keys[key];
+}

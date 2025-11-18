@@ -68,4 +68,6 @@ public:
 	virtual property bool IsFocused { bool get() { return this->Focused; } }
 
 	virtual void SetMouseCapture(bool capture);
+
+	virtual bool GetKeyState(int key);
 };

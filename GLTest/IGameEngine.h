@@ -14,4 +14,6 @@ public interface struct IGameEngine {
 	property bool IsFocused { bool get(); }
 
 	void SetMouseCapture(bool capture);
+
+	bool GetKeyState(int key);
 };
