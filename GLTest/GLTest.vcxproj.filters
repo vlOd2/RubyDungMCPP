@@ -35,9 +35,33 @@
     <ClInclude Include="RDHitResult.h">
       <Filter>RubyDung</Filter>
     </ClInclude>
-    <ClInclude Include="RDAABB.h" />
-    <ClInclude Include="RDTile.h" />
-    <ClInclude Include="RDTesselator.h" />
+    <ClInclude Include="RDAABB.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDChunk.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDFrustum.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDLevel.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDLevelListener.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDLevelRenderer.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDPlayer.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDTesselator.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
+    <ClInclude Include="RDTile.h">
+      <Filter>RubyDung</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Game">

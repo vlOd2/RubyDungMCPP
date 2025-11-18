@@ -17,6 +17,7 @@ private:
 	array<int>^ lightDepths;
 	List<RDLevelListener^>^ listeners;
 
+public:
 	RDLevel(int w, int h, int d) : width(w), height(h), depth(d) {
 		this->blocks = gcnew array<unsigned char>(w * h * d);
 		this->lightDepths = gcnew array<int>(w * d);
@@ -33,7 +34,6 @@ private:
 		CalcLightDepths(0, 0, w, h);
 	}
 
-public:
 	void CalcLightDepths(int x0, int y0, int x1, int y1) {
 		for (int x = x0; x < x0 + x1; x++) {
 			for (int z = y0; z < y0 + y1; z++) {

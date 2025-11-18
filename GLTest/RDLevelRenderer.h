@@ -111,12 +111,12 @@ public:
 		}
 	}
 
-	void RenderHit(RDHitResult% h) {
+	void RenderHit(RDHitResult^ h) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		glColor4f(1.0F, 1.0F, 1.0F, (float)Math::Sin(RDTimer::MilliTime() / 100.0F) * 0.2F + 0.4F);
 		this->t->Init();
-		RDTile::rock->RenderFace(this->t, h.x, h.y, h.z, h.f);
+		RDTile::rock->RenderFace(this->t, h->x, h->y, h->z, h->f);
 		this->t->Flush();
 		glDisable(GL_BLEND);
 	}
