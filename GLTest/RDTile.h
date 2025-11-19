@@ -3,6 +3,8 @@
 #include "RDTesselator.h"
 #include "RDLevel.h"
 
+#define IS_SHADOW_LAYER(defcolor) ((br == defcolor) ^ layer) == 1
+
 public ref class RDTile {
 public:
 	static RDTile^ rock = gcnew RDTile(0);
@@ -34,7 +36,7 @@ public:
 		float br;
 		if (!level->IsSolidTile(x, y - 1, z)) {
 			br = level->GetBrightness(x, y - 1, z) * c1;
-			if (br == c1 ^ layer == 1) {
+			if (IS_SHADOW_LAYER(c1)) {
 				t->Color(br, br, br);
 				t->Tex(u0, v1);
 				t->Vertex(x0, y0, z1);
@@ -49,7 +51,7 @@ public:
 
 		if (!level->IsSolidTile(x, y + 1, z)) {
 			br = level->GetBrightness(x, y, z) * c1;
-			if (br == c1 ^ layer == 1) {
+			if (IS_SHADOW_LAYER(c1)) {
 				t->Color(br, br, br);
 				t->Tex(u1, v1);
 				t->Vertex(x1, y1, z1);
@@ -64,7 +66,7 @@ public:
 
 		if (!level->IsSolidTile(x, y, z - 1)) {
 			br = level->GetBrightness(x, y, z - 1) * c2;
-			if (br == c2 ^ layer == 1) {
+			if (IS_SHADOW_LAYER(c2)) {
 				t->Color(br, br, br);
 				t->Tex(u1, v0);
 				t->Vertex(x0, y1, z0);
@@ -79,7 +81,7 @@ public:
 
 		if (!level->IsSolidTile(x, y, z + 1)) {
 			br = level->GetBrightness(x, y, z + 1) * c2;
-			if (br == c2 ^ layer == 1) {
+			if (IS_SHADOW_LAYER(c2)) {
 				t->Color(br, br, br);
 				t->Tex(u0, v0);
 				t->Vertex(x0, y1, z1);
@@ -94,7 +96,7 @@ public:
 
 		if (!level->IsSolidTile(x - 1, y, z)) {
 			br = level->GetBrightness(x - 1, y, z) * c3;
-			if (br == c3 ^ layer == 1) {
+			if (IS_SHADOW_LAYER(c3)) {
 				t->Color(br, br, br);
 				t->Tex(u1, v0);
 				t->Vertex(x0, y1, z1);
@@ -109,7 +111,7 @@ public:
 
 		if (!level->IsSolidTile(x + 1, y, z)) {
 			br = level->GetBrightness(x + 1, y, z) * c3;
-			if (br == c3 ^ layer == 1) {
+			if (IS_SHADOW_LAYER(c3)) {
 				t->Color(br, br, br);
 				t->Tex(u0, v1);
 				t->Vertex(x1, y0, z1);

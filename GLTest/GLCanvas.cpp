@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "GLCanvas.h"
 
+constexpr int CENTER_CURSOR_THRESHOLD = 5;
+
+typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int interval);
+
 HMODULE libGLHandle = LoadLibraryA("opengl32.dll");
 
 static void* GLGetProcAddress(LPCSTR name) {
@@ -102,16 +106,24 @@ void GLCanvas::OnHandleCreated(EventArgs^ e) {
 		throw gcnew Exception("Failed to make OpenGL context current");
 	gladLoadGLLoader(GLGetProcAddress);
 
+	PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+	if (wglSwapIntervalEXT) {
+		wglSwapIntervalEXT(0);
+	}
+
 	this->game->Init(this);
 }
 
 void GLCanvas::OnHandleDestroyed(EventArgs^ e) {
 	UserControl::OnHandleDestroyed(e);
+	this->game->Destroy();
+
 	if (this->glContext) {
 		wglMakeCurrent(nullptr, nullptr);
 		wglDeleteContext(this->glContext);
 		this->glContext = nullptr;
 	}
+
 	if (this->deviceContext) {
 		ReleaseDC(CastPtr<HWND>(this->Handle), this->deviceContext);
 		this->deviceContext = nullptr;
@@ -170,6 +182,11 @@ void GLCanvas::OnMouseUp(MouseEventArgs^ e) {
 }
 
 void GLCanvas::OnMouseMove(MouseEventArgs^ e) {
+	if (this->mouseSkipPos) {
+		this->mouseSkipPos--;
+		return;
+	}
+
 	float mx = (float)e->X;
 	float my = (float)e->Y;
 	float xd = mx - this->mouseX;
@@ -177,12 +194,18 @@ void GLCanvas::OnMouseMove(MouseEventArgs^ e) {
 	this->mouseX = mx;
 	this->mouseY = my;
 	this->game->OnMouseMove(this->mouseX, this->mouseY, xd, yd);
-	if (this->mouseCaptured && this->Focused) {
-		// warp mouse when close to edge
-		if (e->X < 5 || e->X >= this->ClientSize.Width - 5 ||
-			e->Y < 5 || e->Y >= this->ClientSize.Height - 5) {
 
-		}
+	if (!this->mouseCaptured || !this->Focused) {
+		return;
+	}
+
+	if (e->X < CENTER_CURSOR_THRESHOLD || e->Y < CENTER_CURSOR_THRESHOLD ||
+		e->X >= this->ClientSize.Width - CENTER_CURSOR_THRESHOLD || e->Y >= this->ClientSize.Height - CENTER_CURSOR_THRESHOLD) {
+		Point center = Point(this->ClientSize.Width / 2, this->ClientSize.Height / 2);
+		this->mouseX = (float)center.X;
+		this->mouseY = (float)center.Y;
+		this->Cursor->Position = this->PointToScreen(center);
+		this->mouseSkipPos = 2;
 	}
 }
 
@@ -198,17 +221,21 @@ void GLCanvas::SetMouseCapture(bool capture) {
 	this->Focus();
 	this->Cursor = Cursors::Default;
 	this->HandleMouseCapture();
+	if (capture) {
+		this->Cursor->Hide();
+	}
+	else {
+		this->Cursor->Show();
+	}
 }
 
 void GLCanvas::HandleMouseCapture() {
 	this->Capture = this->mouseCaptured;
 	if (this->mouseCaptured && this->Focused) {
 		this->Cursor->Clip = RectangleToScreen(Drawing::Rectangle(Point::Empty, ClientSize));
-		//this->Cursor->Hide();
 	}
 	else {
 		this->Cursor->Clip = Rectangle::Empty;
-		//this->Cursor->Show();
 	}
 }
 

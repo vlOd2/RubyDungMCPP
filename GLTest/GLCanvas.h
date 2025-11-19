@@ -20,6 +20,7 @@ private:
 	bool mouseCaptured;
 	float mouseX;
 	float mouseY;
+	int mouseSkipPos;
 	array<bool>^ keys;
 	IGame^ game;
 

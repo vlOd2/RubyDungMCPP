@@ -5,6 +5,7 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
+using namespace System::IO;
 
 public ref class RDLevel {
 public:
@@ -36,6 +37,49 @@ public:
 		}
 
 		CalcLightDepths(0, 0, w, h);
+		Load();
+	}
+
+	void Save() {
+		try {
+			Console::WriteLine("Saving level");
+			FileStream^ stream = File::Open("level.dat", FileMode::Create);
+			BinaryWriter^ writer = gcnew BinaryWriter(stream);
+			writer->Write(this->width);
+			writer->Write(this->height);
+			writer->Write(this->depth);
+			writer->Write(this->blocks);
+			writer->Flush();
+			delete writer;
+			delete stream;
+		}
+		catch (Exception^ ex) {
+			Console::WriteLine("Failed to save level: " + ex);
+		}
+	}
+
+	void Load() {
+		try {
+			Console::WriteLine("Loading level");
+			FileStream^ stream = File::Open("level.dat", FileMode::Open);
+			BinaryReader^ reader = gcnew BinaryReader(stream);
+
+			this->width = reader->ReadInt32();
+			this->height = reader->ReadInt32();
+			this->depth = reader->ReadInt32();
+			this->blocks = reader->ReadBytes(this->width * this->height * this->depth);
+
+			delete reader;
+			delete stream;
+
+			CalcLightDepths(0, 0, this->width, this->height);
+			for each (RDLevelListener ^ listener in this->listeners) {
+				listener->AllChanged();
+			}
+		}
+		catch (Exception^ ex) {
+			Console::WriteLine("Failed to load level: " + ex);
+		}
 	}
 
 	void CalcLightDepths(int x0, int y0, int x1, int y1) {

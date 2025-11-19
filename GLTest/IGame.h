@@ -14,4 +14,6 @@ public interface struct IGame {
 	void OnMouseButton(int btn, bool state);
 
 	void Draw();
+
+	void Destroy();
 };

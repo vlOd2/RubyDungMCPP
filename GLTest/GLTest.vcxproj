@@ -137,14 +137,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="RubyDung.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GLCanvas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainForm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="RubyDung.h" />
     <ClInclude Include="GLCanvas.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="IGameEngine.h" />

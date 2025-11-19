@@ -1,7 +1,7 @@
 #pragma once
 
+#include "pch.h"
 #include <glad/glad.h>
-#include <corecrt_malloc.h>
 
 public ref class RDTesselator {
 private:
@@ -22,6 +22,10 @@ public:
 		this->vertexBuffer = (float*)calloc(300000, sizeof(float));
 		this->texCoordBuffer = (float*)calloc(200000, sizeof(float));
 		this->colorBuffer = (float*)calloc(300000, sizeof(float));
+	}
+
+	~RDTesselator() {
+		this->!RDTesselator();
 	}
 
 	!RDTesselator() {

@@ -114,7 +114,7 @@ public:
 	void RenderHit(RDHitResult^ h) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		glColor4f(1.0F, 1.0F, 1.0F, (float)Math::Sin(RDTimer::MilliTime() / 100.0F) * 0.2F + 0.4F);
+		glColor4f(1.0F, 1.0F, 1.0F, (float)Math::Sin((double)RDTimer::MilliTime() / 100.0) * 0.2 + 0.4);
 		this->t->Init();
 		RDTile::rock->RenderFace(this->t, h->x, h->y, h->z, h->f);
 		this->t->Flush();

@@ -2,7 +2,6 @@
 
 #include "pch.h"
 #include <glad/glad.h>
-#include <corecrt_malloc.h>
 
 using namespace System;
 using namespace System::Collections::Generic;
@@ -38,6 +37,11 @@ public:
 				BitmapData^ data = bmp->LockBits(Drawing::Rectangle(0, 0, bmp->Width, bmp->Height), 
 					ImageLockMode::ReadOnly, PixelFormat::Format32bppArgb);
 				
+#pragma warning(push)
+#pragma warning(disable: 6011)
+#pragma warning(disable: 6281)
+#pragma warning(disable: 6386)
+
 				size_t bufferSize = data->Width * data->Height * 4;
 				unsigned char* buffer = (unsigned char*)calloc(bufferSize, 1);
 
@@ -47,6 +51,8 @@ public:
 					buffer[i + 2] = (CastPtr<unsigned char*>(data->Scan0))[i + 0]; // B
 					buffer[i + 3] = (CastPtr<unsigned char*>(data->Scan0))[i + 3]; // A
 				}
+
+#pragma warning(pop)
 
 				unsigned int texID;
 				glGenTextures(1, &texID);
