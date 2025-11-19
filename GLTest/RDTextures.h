@@ -4,15 +4,21 @@
 #include <glad/glad.h>
 
 using namespace System;
+using namespace System::Resources;
 using namespace System::Collections::Generic;
 using namespace System::Drawing;
 using namespace System::Drawing::Imaging;
 
 public ref class RDTextures abstract sealed {
 private:
+	static ResourceManager^ resManager;
 	static Dictionary<String^, int>^ idMap = gcnew Dictionary<String^, int>();
 
 public:
+	static RDTextures() {
+		RDTextures::resManager = gcnew ResourceManager("GLTest.Assets", RDTextures::typeid->Assembly);
+	}
+
 	static unsigned int LoadTexture(String^ resourceName, int mode) {
 		try {
 			if (idMap->ContainsKey(resourceName)) {
@@ -22,14 +28,26 @@ public:
 				Bitmap^ bmp = nullptr;
 				
 				try {
-					bmp = gcnew Bitmap(Image::FromFile(resourceName));
+					bmp = safe_cast<Bitmap^>(resManager->GetObject(resourceName));
+					if (!bmp) {
+						Console::WriteLine("Could not find embedded asset: {0}", resourceName);
+						bmp = gcnew Bitmap(Image::FromFile(resourceName + ".png"));
+					}
 				}
 				catch (Exception^ ex) {
-					Console::WriteLine("Failed to read texture {0}: {1}", resourceName, ex);
+					Console::WriteLine("Failed to read asset {0}: {1}", resourceName, ex);
+				}
+
+				if (!bmp) {
 					bmp = gcnew Bitmap(256, 256);
 					for (int x = 0; x < 256; x++) {
 						for (int y = 0; y < 256; y++) {
-							bmp->SetPixel(x, y, Color::Purple);
+							if ((x / 4 + y / 4) % 2 == 0) {
+								bmp->SetPixel(x, y, Color::Black);
+							}
+							else {
+								bmp->SetPixel(x, y, Color::Purple);
+							}
 						}
 					}
 				}
@@ -42,7 +60,7 @@ public:
 #pragma warning(disable: 6281)
 #pragma warning(disable: 6386)
 
-				size_t bufferSize = data->Width * data->Height * 4;
+				size_t bufferSize = (size_t)(data->Width * data->Height * 4);
 				unsigned char* buffer = (unsigned char*)calloc(bufferSize, 1);
 
 				for (int i = 0; i < bufferSize; i += 4) {

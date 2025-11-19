@@ -23,7 +23,7 @@ public:
 private:
 	bool dirty = true;
 	unsigned int lists = 0xFFFFFFFF;
-	static unsigned int texture = RDTextures::LoadTexture("terrain.png", GL_NEAREST);
+	static unsigned int texture = RDTextures::LoadTexture("terrain", GL_NEAREST);
 	static RDTesselator^ t = gcnew RDTesselator();
 
 public:
