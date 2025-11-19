@@ -29,3 +29,16 @@ void MainForm::aboutToolStripMenuItem_Click(Object^ sender, EventArgs^ e) {
 		L"RubyDung ported to C++/CLI by vlOd\nOriginal written by Markus Persson", 
 		nullptr);
 }
+
+void MainForm::controlsToolStripMenuItem_Click(Object^ sender, EventArgs^ e) {
+	MessageBox::Show(
+		"LMB: Place block\n"
+		"RMB: Break block\n"
+		"Mouse Move: Look around\n"
+		"W/A/S/D: Walk\n"
+		"Space: Jump\n"
+		"Esc: Toggle cursor lock",
+		"Controls",
+		MessageBoxButtons::OK,
+		MessageBoxIcon::Information);
+}

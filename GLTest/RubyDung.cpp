@@ -17,6 +17,7 @@ void RubyDung::Init(IGameEngine^ engine) {
 	this->width = engine->Width;
 	this->height = engine->Height;
 	
+	glViewport(0, 0, this->width, this->height);
 	glEnable(GL_TEXTURE_2D);
 	glShadeModel(GL_SMOOTH);
 	glClearColor(fr, fg, fb, 0.0F);
@@ -26,12 +27,13 @@ void RubyDung::Init(IGameEngine^ engine) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
+
 	this->level = gcnew RDLevel(256, 256, 64);
 	this->levelRenderer = gcnew RDLevelRenderer(this->level);
 	this->player = gcnew RDPlayer(engine, this->level);
 
-	this->mouseCaptured = true;
-	this->engine->SetMouseCapture(this->mouseCaptured);
+	//this->mouseCaptured = true;
+	//this->engine->SetMouseCapture(this->mouseCaptured);
 }
 
 void RubyDung::OnResize(int width, int height) {
@@ -210,5 +212,5 @@ void RubyDung::Render(float a) {
 }
 
 void RubyDung::Destroy() {
-
+	this->level->Save();
 }
