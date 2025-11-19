@@ -102,7 +102,7 @@ void RubyDung::Draw() {
 	this->Render(this->timer->a);
 	this->frames++;
 
-	if (RDTimer::MilliTime() >= this->lastTime + 1000L) {
+	while (RDTimer::MilliTime() >= this->lastTime + 1000L) {
 		Console::WriteLine("{0} fps, {1}", this->frames, RDChunk::updates);
 		RDChunk::updates = 0;
 		this->lastTime += 1000L;
