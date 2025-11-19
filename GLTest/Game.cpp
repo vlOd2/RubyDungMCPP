@@ -2,6 +2,8 @@
 #include "Game.h"
 
 Game::Game() {
+	this->viewportBuffer = (int*)calloc(16, sizeof(int));
+	this->selectBuffer = (int*)calloc(2000, sizeof(int));
 }
 
 void Game::Init(IGameEngine^ engine) {
@@ -131,15 +133,60 @@ void Game::SetupCamera(float a) {
 void Game::SetupPickCamera(float a, int x, int y) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//glGetIntegerv(GL_VIEWPORT, this.viewportBuffer);
-	//GLU.gluPickMatrix((float)x, (float)y, 5.0F, 5.0F, this.viewportBuffer);
-	//GLU.gluPerspective(70.0F, (float)this.width / (float)this.height, 0.05F, 1000.0F);
+	glGetIntegerv(GL_VIEWPORT, this->viewportBuffer);
+	Matrix4x4 perspective = Matrix4x4::CreatePerspectiveFieldOfView(70.0F * (Math::PI / 180.0F),
+		(float)this->width / (float)this->height, 0.05F, 1000.0F);
+	glLoadMatrixf(&perspective.M11);
+	gluPickMatrix((float)x, (float)y, 5.0F, 5.0F, this->viewportBuffer);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	this->MoveCameraToPlayer(a);
 }
 
+void Game::Pick(float a) {
+	int bufOff = 0;
+
+	glSelectBuffer(2000, (unsigned int*)this->selectBuffer);
+	glRenderMode(GL_SELECT);
+	this->SetupPickCamera(a, this->width / 2, this->height / 2);
+	this->levelRenderer->Pick(this->player);
+	int hits = glRenderMode(GL_RENDER);
+
+	long closest = 0L;
+	int names[10]{};
+	int hitNameCount = 0;
+
+	for (int i = 0; i < hits; i++) {
+		int nameCount = this->selectBuffer[bufOff++];
+		long minZ = (long)this->selectBuffer[bufOff++];
+		bufOff++;
+
+		int j;
+		if (minZ >= closest && i != 0) {
+			for (j = 0; j < nameCount; ++j) {
+				bufOff++;
+			}
+		}
+		else {
+			closest = minZ;
+			hitNameCount = nameCount;
+
+			for (j = 0; j < nameCount; ++j) {
+				names[j] = this->selectBuffer[bufOff++];
+			}
+		}
+	}
+
+	if (hitNameCount > 0) {
+		this->hitResult = gcnew RDHitResult(names[0], names[1], names[2], names[3], names[4]);
+	}
+	else {
+		this->hitResult = nullptr;
+	}
+}
+
 void Game::Render(float a) {
+	this->Pick(a);
 	glViewport(0, 0, this->width, this->height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	this->SetupCamera(a);

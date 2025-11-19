@@ -79,13 +79,13 @@ public:
 		int z1 = (int)(box->z1 + 1.0F);
 		glInitNames();
 
-		for (int x = x0; x < x1; ++x) {
+		for (int x = x0; x < x1; x++) {
 			glPushName(x);
 
-			for (int y = y0; y < y1; ++y) {
+			for (int y = y0; y < y1; y++) {
 				glPushName(y);
 
-				for (int z = z0; z < z1; ++z) {
+				for (int z = z0; z < z1; z++) {
 					glPushName(z);
 					if (this->level->IsSolidTile(x, y, z)) {
 						glPushName(0);

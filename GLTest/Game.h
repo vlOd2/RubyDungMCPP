@@ -2,13 +2,14 @@
 
 #include "pch.h"
 #include "IGame.h"
-#include <glad/glad.h>
 #include "RDTimer.h"
 #include "RDLevel.h"
 #include "RDLevelRenderer.h"
 #include "RDPlayer.h"
 #include "RDHitResult.h"
 #include "RDTextures.h"
+#include <glad/glad.h>
+#include <gl/GLU.h>
 
 using namespace System;
 using namespace System::Numerics;
@@ -19,25 +20,29 @@ private:
 	IGameEngine^ engine;
 	int width;
 	int height;
+	float* fogColor;
 	RDTimer^ timer = gcnew RDTimer(60.0F);
 	RDLevel^ level;
 	RDLevelRenderer^ levelRenderer;
 	RDPlayer^ player;
 	RDHitResult^ hitResult;
+	int* viewportBuffer;
+	int* selectBuffer;
 	long long lastTime = RDTimer::MilliTime();
 	int frames = 0;
-	float* fogColor;
 	bool mouseCaptured;
 
 	void Tick();
-
-	void Render(float a);
 
 	void MoveCameraToPlayer(float a);
 
 	void SetupCamera(float a);
 
 	void SetupPickCamera(float a, int x, int y);
+
+	void Pick(float a);
+
+	void Render(float a);
 
 public:
 	Game();

@@ -60,6 +60,15 @@ static char GetKeyChar(Keys key, Keys mods)
 	return c;
 }
 
+static int MapMouseButton(MouseButtons btn) {
+	switch (btn) {
+		case MouseButtons::Left: return 0;
+		case MouseButtons::Right: return 1;
+		case MouseButtons::Middle: return 2;
+		default: return -1;
+	}
+}
+
 GLCanvas::GLCanvas(IGame^ game)
 {
 	this->game = game;
@@ -152,12 +161,12 @@ void GLCanvas::OnKeyUp(KeyEventArgs^ e) {
 
 void GLCanvas::OnMouseDown(MouseEventArgs^ e) {
 	UserControl::OnMouseDown(e);
-	this->game->OnMouseButton((int)e->Button, true);
+	this->game->OnMouseButton(MapMouseButton(e->Button), true);
 }
 
 void GLCanvas::OnMouseUp(MouseEventArgs^ e) {
 	UserControl::OnMouseUp(e);
-	this->game->OnMouseButton((int)e->Button, false);
+	this->game->OnMouseButton(MapMouseButton(e->Button), false);
 }
 
 void GLCanvas::OnMouseMove(MouseEventArgs^ e) {

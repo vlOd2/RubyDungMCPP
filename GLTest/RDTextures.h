@@ -53,7 +53,7 @@ public:
 				glBindTexture(GL_TEXTURE_2D, texID);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mode);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mode);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bmp->Width, bmp->Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bmp->Width, bmp->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
 				free(buffer);
 				bmp->UnlockBits(data);
