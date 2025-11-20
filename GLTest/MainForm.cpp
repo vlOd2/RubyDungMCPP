@@ -24,10 +24,10 @@ MainForm::~MainForm()
 }
 
 void MainForm::aboutToolStripMenuItem_Click(Object^ sender, EventArgs^ e) {
-	ShellAboutW(CastPtr<HWND>(this->Handle), 
-		L"RubyDung#RubyDung C++/CLI Edition", 
-		L"RubyDung ported to C++/CLI by vlOd\nOriginal written by Markus Persson", 
-		nullptr);
+	ShellAboutA(CastPtr<HWND>(this->Handle), 
+		"RubyDung#RubyDung C++/CLI Edition", 
+		"RubyDung ported to C++/CLI by vlOd\nOriginal written by Markus Persson", 
+		CastPtr<HICON>(SystemIcons::Information->Handle));
 }
 
 void MainForm::controlsToolStripMenuItem_Click(Object^ sender, EventArgs^ e) {
