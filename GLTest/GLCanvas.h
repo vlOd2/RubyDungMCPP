@@ -50,6 +50,8 @@ protected:
 
 	void OnResize(EventArgs^ e) override;
 
+	void OnLostFocus(EventArgs^ e) override;
+
 private:
 	void OnApplicationIdle(Object^ sender, EventArgs^ e);
 

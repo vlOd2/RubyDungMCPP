@@ -37,6 +37,8 @@ void MainForm::controlsToolStripMenuItem_Click(Object^ sender, EventArgs^ e) {
 		"Mouse Move: Look around\n"
 		"W/A/S/D: Walk\n"
 		"Space: Jump\n"
+		"R: Reset position\n"
+		"Enter: Save level\n"
 		"Esc: Toggle cursor lock",
 		"Controls",
 		MessageBoxButtons::OK,

@@ -244,3 +244,16 @@ bool GLCanvas::GetKeyState(int key) {
 		return false;
 	return this->keys[key];
 }
+
+void GLCanvas::OnLostFocus(EventArgs^ e) {
+	UserControl::OnLostFocus(e);
+	this->game->OnMouseButton(0, false);
+	this->game->OnMouseButton(1, false);
+	this->game->OnMouseButton(2, false);
+	for (int i = 0; i < this->keys->Length; i++) {
+		if (this->keys[i]) {
+			this->keys[i] = false;
+			this->game->OnKeyState(i, '\0', false, false);
+		}
+	}
+}
