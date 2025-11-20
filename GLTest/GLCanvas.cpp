@@ -195,10 +195,10 @@ void GLCanvas::OnMouseMove(MouseEventArgs^ e) {
 	this->mouseY = my;
 
 	if (this->mouseCaptured && this->Focused) {
-		float left = CENTER_CURSOR_THRESHOLD - e->X;
-		float top = CENTER_CURSOR_THRESHOLD - e->Y;
-		float right = e->X - (this->ClientSize.Width - CENTER_CURSOR_THRESHOLD);
-		float bottom = e->Y - (this->ClientSize.Height - CENTER_CURSOR_THRESHOLD);
+		int left = CENTER_CURSOR_THRESHOLD - e->X;
+		int top = CENTER_CURSOR_THRESHOLD - e->Y;
+		int right = e->X - (this->ClientSize.Width - CENTER_CURSOR_THRESHOLD);
+		int bottom = e->Y - (this->ClientSize.Height - CENTER_CURSOR_THRESHOLD);
 		bool oob = left > 0 || top > 0 || right > 0 || bottom > 0;
 
 		if (oob) {
@@ -206,8 +206,8 @@ void GLCanvas::OnMouseMove(MouseEventArgs^ e) {
 			Point center = Point(this->ClientSize.Width / 2, this->ClientSize.Height / 2);
 			this->mouseX = (float)center.X;
 			this->mouseY = (float)center.Y;
-			xd = Math::Max(0.0F, Math::Max(left, right));
-			yd = Math::Max(0.0F, Math::Max(top, bottom));
+			xd = (float)Math::Max(0, Math::Max(left, right));
+			yd = (float)Math::Max(0, Math::Max(top, bottom));
 			this->Cursor->Position = this->PointToScreen(center);
 			this->mouseSkipPos = 2;
 		}

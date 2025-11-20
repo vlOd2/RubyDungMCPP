@@ -11,7 +11,7 @@ void RubyDung::Init(IGameEngine^ engine) {
 	float fr = 0.5F;
 	float fg = 0.8F;
 	float fb = 1.0F;
-	fogColor = new float[] { (float)(col >> 16 & 255) / 255.0F, (float)(col >> 8 & 255) / 255.0F, (float)(col & 255) / 255.0F, 1.0F };
+	fogColor = new float[4] { (float)(col >> 16 & 255) / 255.0F, (float)(col >> 8 & 255) / 255.0F, (float)(col & 255) / 255.0F, 1.0F };
 
 	this->engine = engine;
 	this->width = engine->Width;

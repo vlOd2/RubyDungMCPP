@@ -12,7 +12,6 @@
 #include <gl/GLU.h>
 
 using namespace System;
-using namespace System::Numerics;
 
 public ref class RubyDung : public IGame
 {
