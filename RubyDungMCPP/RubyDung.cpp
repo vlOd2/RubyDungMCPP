@@ -153,13 +153,13 @@ void RubyDung::Pick(float a) {
 	this->levelRenderer->Pick(this->player);
 	int hits = glRenderMode(GL_RENDER);
 
-	long closest = 0L;
+	long long closest = 0L;
 	int names[10]{};
 	int hitNameCount = 0;
 
 	for (int i = 0; i < hits; i++) {
 		int nameCount = this->selectBuffer[bufOff++];
-		long minZ = (long)this->selectBuffer[bufOff++];
+		long long minZ = (long)this->selectBuffer[bufOff++];
 		bufOff++;
 
 		int j;
