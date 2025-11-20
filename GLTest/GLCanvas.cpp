@@ -193,20 +193,27 @@ void GLCanvas::OnMouseMove(MouseEventArgs^ e) {
 	float yd = my - this->mouseY;
 	this->mouseX = mx;
 	this->mouseY = my;
+
+	if (this->mouseCaptured && this->Focused) {
+		float left = CENTER_CURSOR_THRESHOLD - e->X;
+		float top = CENTER_CURSOR_THRESHOLD - e->Y;
+		float right = e->X - (this->ClientSize.Width - CENTER_CURSOR_THRESHOLD);
+		float bottom = e->Y - (this->ClientSize.Height - CENTER_CURSOR_THRESHOLD);
+		bool oob = left > 0 || top > 0 || right > 0 || bottom > 0;
+
+		if (oob) {
+			//Console::WriteLine("OOB {0} {1} {2} {3}", left, top, right, bottom);
+			Point center = Point(this->ClientSize.Width / 2, this->ClientSize.Height / 2);
+			this->mouseX = (float)center.X;
+			this->mouseY = (float)center.Y;
+			xd = Math::Max(0.0F, Math::Max(left, right));
+			yd = Math::Max(0.0F, Math::Max(top, bottom));
+			this->Cursor->Position = this->PointToScreen(center);
+			this->mouseSkipPos = 2;
+		}
+	}
+
 	this->game->OnMouseMove(this->mouseX, this->mouseY, xd, yd);
-
-	if (!this->mouseCaptured || !this->Focused) {
-		return;
-	}
-
-	if (e->X < CENTER_CURSOR_THRESHOLD || e->Y < CENTER_CURSOR_THRESHOLD ||
-		e->X >= this->ClientSize.Width - CENTER_CURSOR_THRESHOLD || e->Y >= this->ClientSize.Height - CENTER_CURSOR_THRESHOLD) {
-		Point center = Point(this->ClientSize.Width / 2, this->ClientSize.Height / 2);
-		this->mouseX = (float)center.X;
-		this->mouseY = (float)center.Y;
-		this->Cursor->Position = this->PointToScreen(center);
-		this->mouseSkipPos = 2;
-	}
 }
 
 void GLCanvas::OnResize(EventArgs^ e) {

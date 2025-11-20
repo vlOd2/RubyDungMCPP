@@ -3,101 +3,97 @@
 #include "RDAABB.h"
 #include <glad/glad.h>
 
-using namespace System::Numerics;
-
-static Matrix4x4 ExportMatrix(unsigned int name) {
-	float matrix[4 * 4];
-	glGetFloatv(name, matrix);
-	return Matrix4x4(
-		matrix[0], matrix[4], matrix[8], matrix[12],
-		matrix[1], matrix[5], matrix[9], matrix[13],
-		matrix[2], matrix[6], matrix[10], matrix[14],
-		matrix[3], matrix[7], matrix[11], matrix[15]
-	);
-}
-
 public ref class RDFrustum {
 private:
-	array<Vector4>^ planes;
+    array<float, 2>^ m_Frustum;
+    float* proj;
+    float* modl;
+    float* clip;
+
+	void NormalizePlane(int side) {
+		float magnitude = (float)Math::Sqrt(
+			this->m_Frustum[side, 0] * this->m_Frustum[side, 0] + 
+			this->m_Frustum[side, 1] * this->m_Frustum[side, 1] + 
+			this->m_Frustum[side, 2] * this->m_Frustum[side, 2]
+		);
+		this->m_Frustum[side, 0] /= magnitude;
+		this->m_Frustum[side, 1] /= magnitude;
+		this->m_Frustum[side, 2] /= magnitude;
+		this->m_Frustum[side, 3] /= magnitude;
+	}
 
 public:
     RDFrustum() {
-        this->planes = gcnew array<Vector4>(6);
+        this->m_Frustum = gcnew array<float, 2>(6, 4);
+		this->proj = new float[16];
+		this->modl = new float[16];
+		this->clip = new float[16];
     }
 
 	void Calculate() {
-		Matrix4x4 projMatrix = ExportMatrix(GL_PROJECTION_MATRIX);
-		Matrix4x4 viewMatrix = ExportMatrix(GL_MODELVIEW_MATRIX);
-        Matrix4x4 clipMatrix = projMatrix * viewMatrix;
-
-        this->planes[0] = Vector4(
-            clipMatrix.M41 - clipMatrix.M11,
-            clipMatrix.M42 - clipMatrix.M12,
-            clipMatrix.M43 - clipMatrix.M13,
-            clipMatrix.M44 - clipMatrix.M14
-        );
-
-        this->planes[1] = Vector4(
-            clipMatrix.M41 + clipMatrix.M11,
-            clipMatrix.M42 + clipMatrix.M12,
-            clipMatrix.M43 + clipMatrix.M13,
-            clipMatrix.M44 + clipMatrix.M14
-        );
-
-        this->planes[2] = Vector4(
-            clipMatrix.M41 + clipMatrix.M21,
-            clipMatrix.M42 + clipMatrix.M22,
-            clipMatrix.M43 + clipMatrix.M23,
-            clipMatrix.M44 + clipMatrix.M24
-        );
-
-        this->planes[3] = Vector4(
-            clipMatrix.M41 - clipMatrix.M21,
-            clipMatrix.M42 - clipMatrix.M22,
-            clipMatrix.M43 - clipMatrix.M23,
-            clipMatrix.M44 - clipMatrix.M24
-        );
-
-        this->planes[4] = Vector4(
-            clipMatrix.M41 - clipMatrix.M31,
-            clipMatrix.M42 - clipMatrix.M32,
-            clipMatrix.M43 - clipMatrix.M33,
-            clipMatrix.M44 - clipMatrix.M34
-        );
-
-        this->planes[5] = Vector4(
-            clipMatrix.M41 + clipMatrix.M31,
-            clipMatrix.M42 + clipMatrix.M32,
-            clipMatrix.M43 + clipMatrix.M33,
-            clipMatrix.M44 + clipMatrix.M34
-        );
+		glGetFloatv(GL_PROJECTION_MATRIX, this->proj);
+		glGetFloatv(GL_MODELVIEW_MATRIX, this->modl);
+		this->clip[0] = this->modl[0] * this->proj[0] + this->modl[1] * this->proj[4] + this->modl[2] * this->proj[8] + this->modl[3] * this->proj[12];
+		this->clip[1] = this->modl[0] * this->proj[1] + this->modl[1] * this->proj[5] + this->modl[2] * this->proj[9] + this->modl[3] * this->proj[13];
+		this->clip[2] = this->modl[0] * this->proj[2] + this->modl[1] * this->proj[6] + this->modl[2] * this->proj[10] + this->modl[3] * this->proj[14];
+		this->clip[3] = this->modl[0] * this->proj[3] + this->modl[1] * this->proj[7] + this->modl[2] * this->proj[11] + this->modl[3] * this->proj[15];
+		this->clip[4] = this->modl[4] * this->proj[0] + this->modl[5] * this->proj[4] + this->modl[6] * this->proj[8] + this->modl[7] * this->proj[12];
+		this->clip[5] = this->modl[4] * this->proj[1] + this->modl[5] * this->proj[5] + this->modl[6] * this->proj[9] + this->modl[7] * this->proj[13];
+		this->clip[6] = this->modl[4] * this->proj[2] + this->modl[5] * this->proj[6] + this->modl[6] * this->proj[10] + this->modl[7] * this->proj[14];
+		this->clip[7] = this->modl[4] * this->proj[3] + this->modl[5] * this->proj[7] + this->modl[6] * this->proj[11] + this->modl[7] * this->proj[15];
+		this->clip[8] = this->modl[8] * this->proj[0] + this->modl[9] * this->proj[4] + this->modl[10] * this->proj[8] + this->modl[11] * this->proj[12];
+		this->clip[9] = this->modl[8] * this->proj[1] + this->modl[9] * this->proj[5] + this->modl[10] * this->proj[9] + this->modl[11] * this->proj[13];
+		this->clip[10] = this->modl[8] * this->proj[2] + this->modl[9] * this->proj[6] + this->modl[10] * this->proj[10] + this->modl[11] * this->proj[14];
+		this->clip[11] = this->modl[8] * this->proj[3] + this->modl[9] * this->proj[7] + this->modl[10] * this->proj[11] + this->modl[11] * this->proj[15];
+		this->clip[12] = this->modl[12] * this->proj[0] + this->modl[13] * this->proj[4] + this->modl[14] * this->proj[8] + this->modl[15] * this->proj[12];
+		this->clip[13] = this->modl[12] * this->proj[1] + this->modl[13] * this->proj[5] + this->modl[14] * this->proj[9] + this->modl[15] * this->proj[13];
+		this->clip[14] = this->modl[12] * this->proj[2] + this->modl[13] * this->proj[6] + this->modl[14] * this->proj[10] + this->modl[15] * this->proj[14];
+		this->clip[15] = this->modl[12] * this->proj[3] + this->modl[13] * this->proj[7] + this->modl[14] * this->proj[11] + this->modl[15] * this->proj[15];
+		this->m_Frustum[0, 0] = this->clip[3] - this->clip[0];
+		this->m_Frustum[0, 1] = this->clip[7] - this->clip[4];
+		this->m_Frustum[0, 2] = this->clip[11] - this->clip[8];
+		this->m_Frustum[0, 3] = this->clip[15] - this->clip[12];
+		this->NormalizePlane(0);
+		this->m_Frustum[1, 0] = this->clip[3] + this->clip[0];
+		this->m_Frustum[1, 1] = this->clip[7] + this->clip[4];
+		this->m_Frustum[1, 2] = this->clip[11] + this->clip[8];
+		this->m_Frustum[1, 3] = this->clip[15] + this->clip[12];
+		this->NormalizePlane(1);
+		this->m_Frustum[2, 0] = this->clip[3] + this->clip[1];
+		this->m_Frustum[2, 1] = this->clip[7] + this->clip[5];
+		this->m_Frustum[2, 2] = this->clip[11] + this->clip[9];
+		this->m_Frustum[2, 3] = this->clip[15] + this->clip[13];
+		this->NormalizePlane(2);
+		this->m_Frustum[3, 0] = this->clip[3] - this->clip[1];
+		this->m_Frustum[3, 1] = this->clip[7] - this->clip[5];
+		this->m_Frustum[3, 2] = this->clip[11] - this->clip[9];
+		this->m_Frustum[3, 3] = this->clip[15] - this->clip[13];
+		this->NormalizePlane(3);
+		this->m_Frustum[4, 0] = this->clip[3] - this->clip[2];
+		this->m_Frustum[4, 1] = this->clip[7] - this->clip[6];
+		this->m_Frustum[4, 2] = this->clip[11] - this->clip[10];
+		this->m_Frustum[4, 3] = this->clip[15] - this->clip[14];
+		this->NormalizePlane(4);
+		this->m_Frustum[5, 0] = this->clip[3] + this->clip[2];
+		this->m_Frustum[5, 1] = this->clip[7] + this->clip[6];
+		this->m_Frustum[5, 2] = this->clip[11] + this->clip[10];
+		this->m_Frustum[5, 3] = this->clip[15] + this->clip[14];
+		this->NormalizePlane(5);
 	}
 
-    bool Contains(float x0, float y0, float z0, float x1, float y1, float z1) {
-        for each(Vector4 plane in this->planes) {
-            float px0 = plane.X * x0;
-            float py0 = plane.Y * y0;
-            float pz0 = plane.Z * z0;
-            float px1 = plane.X * x1;
-            float py1 = plane.Y * y1;
-            float pz1 = plane.Z * z1;
-
-            float xy00 = px0 + py0;
-            float xy10 = px1 + py0;
-            float xy01 = px0 + py1;
-            float xy11 = px1 + py1;
-
-            if (xy00 + pz0 + plane.W > 0) continue;
-            if (xy10 + pz0 + plane.W > 0) continue;
-            if (xy01 + pz0 + plane.W > 0) continue;
-            if (xy11 + pz0 + plane.W > 0) continue;
-            if (xy00 + pz1 + plane.W > 0) continue;
-            if (xy10 + pz1 + plane.W > 0) continue;
-            if (xy01 + pz1 + plane.W > 0) continue;
-            if (xy11 + pz1 + plane.W > 0) continue;
-
-            return false;
-        }
+    bool Contains(float x1, float y1, float z1, float x2, float y2, float z2) {
+		for (int i = 0; i < 6; i++) {
+			if (this->m_Frustum[i, 0] * x1 + this->m_Frustum[i, 1] * y1 + this->m_Frustum[i, 2] * z1 + this->m_Frustum[i, 3] <= 0.0F && 
+				this->m_Frustum[i, 0] * x2 + this->m_Frustum[i, 1] * y1 + this->m_Frustum[i, 2] * z1 + this->m_Frustum[i, 3] <= 0.0F && 
+				this->m_Frustum[i, 0] * x1 + this->m_Frustum[i, 1] * y2 + this->m_Frustum[i, 2] * z1 + this->m_Frustum[i, 3] <= 0.0F && 
+				this->m_Frustum[i, 0] * x2 + this->m_Frustum[i, 1] * y2 + this->m_Frustum[i, 2] * z1 + this->m_Frustum[i, 3] <= 0.0F && 
+				this->m_Frustum[i, 0] * x1 + this->m_Frustum[i, 1] * y1 + this->m_Frustum[i, 2] * z2 + this->m_Frustum[i, 3] <= 0.0F && 
+				this->m_Frustum[i, 0] * x2 + this->m_Frustum[i, 1] * y1 + this->m_Frustum[i, 2] * z2 + this->m_Frustum[i, 3] <= 0.0F && 
+				this->m_Frustum[i, 0] * x1 + this->m_Frustum[i, 1] * y2 + this->m_Frustum[i, 2] * z2 + this->m_Frustum[i, 3] <= 0.0F && 
+				this->m_Frustum[i, 0] * x2 + this->m_Frustum[i, 1] * y2 + this->m_Frustum[i, 2] * z2 + this->m_Frustum[i, 3] <= 0.0F) {
+				return false;
+			}
+		}
 
         return true;
     }

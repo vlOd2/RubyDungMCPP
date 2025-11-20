@@ -127,9 +127,7 @@ void RubyDung::MoveCameraToPlayer(float a) {
 void RubyDung::SetupCamera(float a) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	Matrix4x4 perspective = Matrix4x4::CreatePerspectiveFieldOfView(70.0F * ((float)Math::PI / 180.0F),
-		(float)this->width / (float)this->height, 0.05F, 1000.0F);
-	glLoadMatrixf(&perspective.M11);
+	gluPerspective(70.0F, (float)this->width / (float)this->height, 0.05F, 1000.0F);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	this->MoveCameraToPlayer(a);
@@ -139,10 +137,8 @@ void RubyDung::SetupPickCamera(float a, int x, int y) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glGetIntegerv(GL_VIEWPORT, this->viewportBuffer);
-	Matrix4x4 perspective = Matrix4x4::CreatePerspectiveFieldOfView(70.0F * ((float)Math::PI / 180.0F),
-		(float)this->width / (float)this->height, 0.05F, 1000.0F);
-	glLoadMatrixf(&perspective.M11);
 	gluPickMatrix((float)x, (float)y, 5.0F, 5.0F, this->viewportBuffer);
+	gluPerspective(70.0F, (float)this->width / (float)this->height, 0.05F, 1000.0F);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	this->MoveCameraToPlayer(a);
